@@ -16,7 +16,7 @@
       <v-dialog v-model="dialogVisible">
         <v-card>
           <v-card-text>
-            {{ selectedNode.value }}
+            {{ selectedNode?.value }}
           </v-card-text>
           <v-card-actions>
             <v-btn @click="dialogVisible = false">Close</v-btn>
