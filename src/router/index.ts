@@ -6,10 +6,15 @@
 
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
-import { routes } from 'vue-router/auto-routes'
+import Home from '@/components/HelloWorld.vue'
+
+const routes = [
+  { path: '/', name: 'Home', component: Home }
+]
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  // avoid import.meta in tests/ts-jest by using a plain base
+  history: createWebHistory('/'),
   routes,
 })
 

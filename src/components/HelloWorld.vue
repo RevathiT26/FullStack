@@ -10,13 +10,15 @@
         </template>
 
         <template #append="{ item }">
-          <v-btn icon="mdi-eye" size="x-small" variant="text" @click.stop="onNodeClick(item)" />
+          <v-btn icon size="x-small" variant="text" @click.stop="onNodeClick(item)">
+            <v-icon>mdi-eye</v-icon>
+          </v-btn>
         </template>
       </v-treeview>
       <v-dialog v-model="dialogVisible">
         <v-card>
-          <v-card-text>
-            {{ selectedNode?.value }}
+          <v-card-text style="text-align: center;">
+            {{ selectedNode ? selectedNode.value : "" }}
           </v-card-text>
           <v-card-actions>
             <v-btn @click="dialogVisible = false">Close</v-btn>
@@ -51,8 +53,10 @@ export default defineComponent({
       { name: "A", description: "This is a description of A", parent: "" },
       { name: "B", description: "This is a description of B", parent: "A" },
       { name: "C", description: "This is a description of C", parent: "A" },
-      { name: "D", description: "This is a description of D", parent: "B" },
-      { name: "E", description: "This is a description of E", parent: "B" },
+      { name: "D", description: "This is a description of D", parent: "A" },
+      { name: "B-1", description: "This is a description of B-1", parent: "B" },
+      { name: "B-2", description: "This is a description of B-2", parent: "B" },
+      { name: "B-3", description: "This is a description of B-3", parent: "B" }
     ]);
 
     const dialogVisible = ref(false);
@@ -62,8 +66,8 @@ export default defineComponent({
 
       list.forEach((item) => {
         map.set(item.name, {
-          value: item.name,
-          title: item.description,
+          value: item.description,
+          title: item.name,
           parent: item.parent,
           children: [],
         });
