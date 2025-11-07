@@ -1,15 +1,7 @@
 <template>
   <v-app>
     <v-container>
-      <!-- <v-text>{{selectedNode}}</v-text> -->
-      <v-treeview
-        :items="treeItems"
-        item-key="value"
-        activatable
-        open-on-click
-        @update:active="onActiveChange"
-      >
-        <!-- Custom label -->
+      <v-treeview :items="treeItems" item-key="value" activatable open-on-click @update:active="onActiveChange">
         <template #label="{ item }">
           <div @click.stop="onNodeClick(item)">
             <strong>{{ item.value }}</strong>
@@ -17,28 +9,21 @@
           </div>
         </template>
 
-        <!-- Optional append button -->
         <template #append="{ item }">
-          <v-btn
-            icon="mdi-eye"
-            size="x-small"
-            variant="text"
-            @click.stop="onNodeClick(item)"
-          />
+          <v-btn icon="mdi-eye" size="x-small" variant="text" @click.stop="onNodeClick(item)" />
         </template>
       </v-treeview>
       <v-dialog v-model="dialogVisible">
-    <v-card>
-      <v-card-title>My Dialog</v-card-title>
-      <v-card-text>
-        {{selectedNode.value}}
-      </v-card-text>
-      <v-card-actions>
-        <v-btn @click="dialogVisible = false">Close</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-      
+        <v-card>
+          <v-card-text>
+            {{ selectedNode.value }}
+          </v-card-text>
+          <v-card-actions>
+            <v-btn @click="dialogVisible = false">Close</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
     </v-container>
   </v-app>
 </template>
@@ -102,7 +87,7 @@ export default defineComponent({
       // ✅ Convert proxy to plain JS object for logging
       selectedNode.value = JSON.parse(JSON.stringify(node));
       console.log("Clicked node:", selectedNode.value);
-      dialogVisible.value=true;
+      dialogVisible.value = true;
     };
 
     const onActiveChange = (activeKeys: string[]) => {
@@ -115,7 +100,6 @@ export default defineComponent({
       }
     };
 
-    // Helper to find node by key
     const findNodeByValue = (
       nodes: TreeItem[],
       value: string
