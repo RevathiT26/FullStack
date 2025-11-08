@@ -2,7 +2,7 @@
   <v-app>
     <v-container>
       <v-treeview :items="treeItems" item-key="value" activatable open-on-click @update:active="onActiveChange">
-        <template #label="{ item }">
+        <template #title="{ item }">
           <div @click.stop="onNodeClick(item)">
             <strong>{{ item.value }}</strong>
             <small style="color: gray"> — {{ item.title }}</small>
