@@ -44,8 +44,16 @@ jobs:
     needs: build
     
     steps:
-    - name: List build output (debug)
-      run: ls -la dist/
+    - name: Install dependencies
+      run: |
+       npm ci
+       npm list  # Show installed packages
+
+    - name: Build with verbose output
+      run: |
+        npm run build -- --mode production
+        echo "Build completed, checking output..."
+        ls -la
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v3
