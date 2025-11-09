@@ -11,8 +11,8 @@ export default defineConfig({
   },
   base: '/', // ensure correct base path
   build: {
-    outDir: 'dist',
-    assetsDir: 'assets'
+    outDir: 'dist',  // Ensure this is set
+    emptyOutDir: true
   },
   test: {
     globals: true,
