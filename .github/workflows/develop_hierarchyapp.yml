@@ -48,10 +48,15 @@ jobs:
        uses: actions/download-artifact@v4
        with:
           name: node-app
+     - name: Deploy
+       uses: Azure/static-web-apps-deploy@v1
+       with:
+          app_location: "/"
+          output_location: "dist"
      - name: Deploy to Azure Web App
        uses: azure/webapps-deploy@v3
        with:
         app-name: 'hierarchyapp'
         slot-name: 'Production'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: .  # Point to correct dist path
+        package: "dist"  # Point to correct dist path
