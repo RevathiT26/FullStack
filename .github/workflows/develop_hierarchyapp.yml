@@ -29,6 +29,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: npm install, build, and test
+        working-directory: ./treenode  # Add this line
         run: |
           npm install
           npm run build --if-present
@@ -44,16 +45,14 @@ jobs:
     needs: build
     
     steps:   
-    - name: Build with verbose output
-      run: |
-        npm run build -- --mode production
-        echo "Build completed, checking output..."
-        ls -la
-
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v3
-      with:
+     - name: Download artifact from build job
+       uses: actions/download-artifact@v4
+       with:
+          name: node-app
+     - name: Deploy to Azure Web App
+       uses: azure/webapps-deploy@v3
+       with:
         app-name: 'hierarchyapp'
         slot-name: 'Production'
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: dist/
+        package: ./treenode/dist/  # Point to correct dist path
