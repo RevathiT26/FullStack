@@ -9,6 +9,11 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src')
     }
   },
+  base: '/', // ensure correct base path
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets'
+  },
   test: {
     globals: true,
     environment: 'happy-dom', // <- changed from 'jsdom'
