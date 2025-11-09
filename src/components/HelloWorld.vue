@@ -4,7 +4,7 @@
       <v-treeview :items="treeItems" item-key="value" activatable open-on-click @update:active="onActiveChange">
         <template #title="{ item }">
           <div @click.stop="onNodeClick(item)">
-            <strong>{{ item.value }}</strong>
+            <strong>{{ item.title }}</strong>
             <small style="color: gray"> — {{ item.title }}</small>
           </div>
         </template>
@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, ref, computed, onMounted } from "vue";
 
 interface FlatData {
   name: string;
@@ -49,17 +49,11 @@ interface TreeItem {
 export default defineComponent({
   name: "TreeExample",
   setup() {
-    const staticData = ref<FlatData[]>([
-      { name: "A", description: "This is a description of A", parent: "" },
-      { name: "B", description: "This is a description of B", parent: "A" },
-      { name: "C", description: "This is a description of C", parent: "A" },
-      { name: "D", description: "This is a description of D", parent: "A" },
-      { name: "B-1", description: "This is a description of B-1", parent: "B" },
-      { name: "B-2", description: "This is a description of B-2", parent: "B" },
-      { name: "B-3", description: "This is a description of B-3", parent: "B" }
-    ]);
+    // replace static/staticData with an empty ref and fetch on mount
+    const staticData = ref<FlatData[]>([]);
 
     const dialogVisible = ref(false);
+
     const buildTree = (list: FlatData[]): TreeItem[] => {
       const map = new Map<string, TreeItem>();
       const roots: TreeItem[] = [];
@@ -95,6 +89,7 @@ export default defineComponent({
     };
 
     const onActiveChange = (activeKeys: string[]) => {
+      console.log("Active keys changed:", activeKeys);
       if (activeKeys.length) {
         const key = activeKeys[0];
         const found = findNodeByValue(treeItems.value, key);
@@ -117,6 +112,34 @@ export default defineComponent({
       }
       return null;
     };
+
+    // Fetch hierarchy from API on component mount
+    onMounted(async () => {
+      try {
+        const res = await fetch("https://hierarchyapp-cfa7g5dth7enb0d3.southindia-01.azurewebsites.net/api/hierarchy", {
+          method: "GET",
+          headers: { "Accept": "application/json" }
+        });
+        if (!res.ok) {
+          console.error("Failed to fetch hierarchy:", res.status, res.statusText);
+          return;
+        }
+        const data = await res.json();
+        // Expecting API to return an array of objects matching FlatData
+        if (Array.isArray(data)) {
+          // optional: validate/normalize items minimally
+          staticData.value = data.map((d: any) => ({
+            name: String(d.name ?? ""),
+            description: String(d.description ?? d.desc ?? ""),
+            parent: String(d.parent ?? "")
+          }));
+        } else {
+          console.error("Unexpected hierarchy response:", data);
+        }
+      } catch (err) {
+        console.error("Error fetching hierarchy:", err);
+      }
+    });
 
     return {
       treeItems,
