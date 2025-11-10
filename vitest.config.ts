@@ -1,29 +1,62 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import vuetify from 'vite-plugin-vuetify';
 import path from 'path';
 
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    vuetify({
+      autoImport: true,
+      theme: {
+        defaultTheme: 'light'
+      }
+    })
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src')
     }
   },
-  base: '/', // ensure correct base path
+  base: '/',
   build: {
-    outDir: 'dist',  // Ensure this is set
+    outDir: 'dist',
     emptyOutDir: true
   },
   test: {
     globals: true,
-    environment: 'happy-dom', // <- changed from 'jsdom'
+    environment: 'happy-dom',
     setupFiles: ['tests/vitest.setup.ts'],
-    coverage: {
-      provider: 'c8',
-      reporter: ['text', 'lcov'],
-      all: true,
-      include: ['src/**/*.{ts,vue}'],
-      exclude: ['src/main.ts']
+    include: ['tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    exclude: ['node_modules', 'dist'],
+    
+    // Completely disable CSS processing
+    css: false,
+    
+    // Handle module resolution
+    deps: {
+      inline: ['vuetify'],
+      external: ['*.css']
+    },
+    
+    // Custom module resolution
+    server: {
+      deps: {
+        inline: ['vuetify']
+      }
+    },
+    
+    // Override file handling
+    pool: 'threads',
+    poolOptions: {
+      threads: {
+        singleThread: true
+      }
     }
-  }
+  },
+  
+  // Add custom plugin for tests to mock CSS
+  define: process.env.VITEST ? {
+    'import.meta.vitest': 'undefined'
+  } : {}
 });

@@ -1,5 +1,5 @@
 <template>
-  <HelloWorld />
+  <TreeNode />
 </template>
 
 <script lang="ts" setup>

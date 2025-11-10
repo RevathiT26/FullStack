@@ -6,7 +6,7 @@
 
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/components/HelloWorld.vue'
+import Home from '@/components/TreeNode.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: Home }
