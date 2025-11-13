@@ -1,31 +1,27 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import vuetify from 'vite-plugin-vuetify';
 import path from 'path';
 
 export default defineConfig({
   plugins: [
-    vue(),
-    vuetify({
-      autoImport: true
-    })
+    vue()
   ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src')
     }
   },
-  build: {
-    outDir: 'dist',
-    emptyOutDir: true,
-    sourcemap: false,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['vue', 'vuetify'],
-          utils: ['axios', 'pinia']
-        }
+  test: {
+    globals: true,
+    environment: 'happy-dom',
+    setupFiles: ['tests/vitest.setup.ts'],
+    include: ['tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    exclude: ['node_modules', 'dist'],
+    css: false,
+    server: {
+      deps: {
+        inline: ['vuetify']
       }
     }
   }

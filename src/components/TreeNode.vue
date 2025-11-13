@@ -510,7 +510,6 @@ export default defineComponent({
       filterByParent,
       clearFilter,
       getParentDisplayName,
-      // Add item related
       newItem,
       formValid,
       addForm,
